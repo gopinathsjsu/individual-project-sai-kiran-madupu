@@ -11,7 +11,7 @@ public class FileUtility {
     static Integer luxuryCount = 0;
     static Integer essentialsCount = 0;
 
-    public static Order readCSVOrder(String filePath) {
+    public static Order readOrderCSV(String filePath) {
         ArrayList < Item > items = new ArrayList < > ();
         String row;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(filePath))) {
@@ -34,7 +34,7 @@ public class FileUtility {
         return new Order(items, miscCount, luxuryCount, essentialsCount);
     }
 
-    public static ArrayList < Inventory > readCSVInitInventory(String filePath) {
+    public static ArrayList < Inventory > readInventoryCSV(String filePath) {
         ArrayList < Inventory > inventories = new ArrayList < > ();
         String row;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(filePath))) {
@@ -55,7 +55,7 @@ public class FileUtility {
         return inventories;
     }
 
-    public static ArrayList < String > readCard(String filePath) {
+    public static ArrayList < String > readCardCSV(String filePath) {
         ArrayList < String > cards = new ArrayList < > ();
         String row;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(filePath))) {
