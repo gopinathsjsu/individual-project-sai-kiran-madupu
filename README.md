@@ -34,19 +34,24 @@ Input file should be processed as follows:
 - Adapter Pattern: The FileUtility class reads input files into Inventory and Order
 
 ## Run the Project
+1. Navigate to the root folder of the project
+2. Execute the below command in the terminal
 `java -cp bin main.Billing "Dataset - Sheet1.csv" "Cards - Sheet1.csv" "Input1 - Sheet1.csv"`
 
-## UML Class Diagram
+The application expects three command line arguments in the same order:
+1. Dataset CSV
+2. Cards CSV
+3. Input CSV
 
+
+## UML Class Diagram
 ![image](https://user-images.githubusercontent.com/18122083/166617019-cc3e5f52-4e12-4020-bcf8-7e72090e4426.png)
 
 
 ## Success Output
-
 <img width="324" alt="image" src="https://user-images.githubusercontent.com/18122083/166613645-5d0b0477-d2a4-4235-a6ee-1d62902315b8.png">
 
 ## Error Output
-
 <img width="531" alt="image" src="https://user-images.githubusercontent.com/18122083/166613678-8b859f65-aad3-494e-a66c-4e4f7fa64a44.png">
 
 
