@@ -28,7 +28,7 @@ Input file should be processed as follows:
 
 ## Design Patterns
 - Composite Pattern: The composite pattern describes a group of objects that are treated the same way as a single instance of the same type of object. Order contains a List of OrderItems, where we can access individual OrderItems.
-- 
+
 - Singleton Pattern: The Singleton pattern ensures that a class has only one instance and provides a global point of access to that instance. The Inventory List is single object that follows singleton design pattern and it acts as the in-memory data store.
 
 - Adapter Pattern: The FileUtility class reads input files into Inventory and Order
