@@ -27,11 +27,11 @@ Input file should be processed as follows:
 - Eclipse IDE
 
 ## Design Patterns
-- Singleton Pattern: Singleton is a creational design pattern, which ensures that only one object of its kind exists and provides a single point of access to it for any other code. Inventory List is single object which follows singleton design pattern as it serves as in-memory database.
+- Composite Pattern: The composite pattern describes a group of objects that are treated the same way as a single instance of the same type of object. Order contains a List of OrderItems, where we can access individual OrderItems.
+- 
+- Singleton Pattern: The Singleton pattern ensures that a class has only one instance and provides a global point of access to that instance. The Inventory List is single object that follows singleton design pattern and it acts as the in-memory data store.
 
-- Composite Pattern: Composite is a structural design pattern that lets you compose objects into tree structures and then work with these structures as if they were individual objects. Order class has List of OrderItem class. Where we can work with OrderItem as Individual object.
-
-- Adapter Pattern: FileReader reads input files into Inventories and Order Class object.
+- Adapter Pattern: The FileUtility class reads input files into Inventory and Order
 
 ## Run the Project
 `java -cp bin main.Billing "Dataset - Sheet1.csv" "Cards - Sheet1.csv" "Input1 - Sheet1.csv"`
