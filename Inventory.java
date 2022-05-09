@@ -1,4 +1,4 @@
-package main;
+
 
 public class Inventory {
 
@@ -29,4 +29,11 @@ public class Inventory {
     public String getCategory() {
         return category;
     }
+
+	@Override
+	public String toString() {
+		return "Inventory [category=" + category + ", item=" + item + ", quantity=" + quantity + ", price=" + price
+				+ "]";
+	}
+    
 }

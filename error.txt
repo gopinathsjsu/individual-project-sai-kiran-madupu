@@ -1,1 +1,1 @@
-Please correct quantities for items Oil 3
+Please correct quantities for items. Limit for Misc is 20, Luxury is 10 and Essential is 10

@@ -1,4 +1,4 @@
-package main;
+
 
 public class Item {
     private Integer quantity;
@@ -22,4 +22,10 @@ public class Item {
     public String getCardNumber() {
         return cardNumber;
     }
+
+	@Override
+	public String toString() {
+		return "Item [quantity=" + quantity + ", cardNumber=" + cardNumber + ", item=" + item + "]";
+	}
+    
 }

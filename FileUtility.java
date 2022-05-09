@@ -1,37 +1,43 @@
-package main;
-
 import java.io.BufferedReader;
 import java.util.ArrayList;
 
-import static main.Billing.INVENTORIES;
 
 public class FileUtility {
 
     static Integer miscCount = 0;
     static Integer luxuryCount = 0;
     static Integer essentialsCount = 0;
+    static final String[] categories = {"Essential", "Luxury", "Misc"};
 
-    public static Order readOrderCSV(String filePath) {
+    public static Order readInputCSV(String filePath) {
         ArrayList < Item > items = new ArrayList < > ();
         String row;
+        String cardNumber = null;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(filePath))) {
             // Skip column headers
             reader.readLine();
             while ((row = reader.readLine()) != null) {
                 String[] data = row.split(",");
-                if (data.length == 3 &&
+                
+                // Card number might be present in only first row of the input order
+                if(data.length == 3 && data[2] != null) {
+                	cardNumber = data[2];
+                }
+
+                if ((data.length == 3 ||  data.length == 2 ) &&
                     validateItem(data[0], Integer.parseInt(data[1])) &&
                     validateQuantity(data[1]) &&
-                    validateCardNumber(data[2])) {
-                    items.add(new Item(data[0], Integer.parseInt(data[1]), data[2]));
+                    validateCardNumber(cardNumber)) {
+                    items.add(new Item(data[0], Integer.parseInt(data[1]), cardNumber));
+                    
                 } else {
-                    System.out.println("Invalid input csv data");
+                    System.out.println("Invalid input CSV data");
                 }
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-        return new Order(items, miscCount, luxuryCount, essentialsCount);
+        return new Order(items, miscCount, luxuryCount, essentialsCount, cardNumber);
     }
 
     public static ArrayList < Inventory > readInventoryCSV(String filePath) {
@@ -41,10 +47,11 @@ public class FileUtility {
             reader.readLine();
             while ((row = reader.readLine()) != null) {
                 String[] data = row.split(",");
+
                 if (data.length == 4 && validateQuantity(data[2]) && validatePrice(data[3])) {
                     inventories.add(
                         new Inventory(
-                            data[0], data[1], Integer.parseInt(data[2]), Double.parseDouble(data[3])));
+                            data[1], data[0], Integer.parseInt(data[2]), Double.parseDouble(data[3])));
                 } else {
                     System.out.println("Invalid inventory dataset data");
                 }
@@ -75,8 +82,8 @@ public class FileUtility {
     }
 
     private static boolean validateItem(String itemName, Integer quantity) {
-        for (Inventory inventory: INVENTORIES) {
-            if (inventory.getItem().equals(itemName)) {
+        for (Inventory inventory: Billing.shopInventory) {
+            if (inventory.getItem().equalsIgnoreCase(itemName)) {
                 validateCategory(inventory.getCategory(), quantity);
                 return true;
             }
@@ -93,9 +100,10 @@ public class FileUtility {
     }
 
     private static boolean validateCategory(String category, int quantity) {
-        if (category.equals("Misc")) miscCount += quantity;
-        if (category.equals("Essential")) essentialsCount += quantity;
-        else if (category.equals("Luxury")) luxuryCount += quantity;
+        if (category.equalsIgnoreCase("Misc")) miscCount += quantity;
+        if (category.equalsIgnoreCase("Essentials")) essentialsCount += quantity;
+        else if (category.equalsIgnoreCase("Luxury")) luxuryCount += quantity;
+        
         return category.matches("Misc|Essential|Luxury");
     }
 }

@@ -1,4 +1,4 @@
-package main;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,22 +7,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static main.config.Config.*;
-import static main.utils.Utility.getItemPrice;
-import static main.utils.Utility.getItemQuantity;
+public class CartManager {
 
-public class ShoppingCart {
-
-    public static void validateAndPlaceOrder(Order order, String cardPath) {
+    public static boolean validateAndPlaceOrder(Order order, String cardPath) {
         double totalAmount = 0.0;
         String errMessage = "";
         String successMessage = "Item,Quantity,Price\n";
         HashSet < String > cards = new HashSet < > ();
-        if (order.getEssentialsCount() <= ESSENTIALS_ITEM_LIMIT &&
-            order.getLuxuryCount() <= LUXURY_ITEM_LIMIT &&
-            order.getMiscCount() <= MISC_ITEM_LIMIT) {
+        if (order.getEssentialCount() <= Config.ESSENTIALS_ITEM_LIMIT &&
+            order.getLuxuryCount() <= Config.LUXURY_ITEM_LIMIT &&
+            order.getMiscCount() <= Config.MISC_ITEM_LIMIT) {
             for (Item item: order.getOrderItems()) {
-                if (item.getQuantity() > getItemQuantity(item.getItem())) {
+//            	System.out.println("item = "+item);
+//            	System.out.println("util item = "+Utility.getItemQuantity(item.getItem()));
+                if (item.getQuantity() > Utility.getItemQuantity(item.getItem())) {
                     errMessage = item.getItem() + " " + item.getQuantity() + "\n";
                 } else {
                     successMessage +=
@@ -30,35 +28,53 @@ public class ShoppingCart {
                         "," +
                         item.getQuantity() +
                         "," +
-                        getItemPrice(item.getItem(), item.getQuantity()) +
+                        Utility.getItemPrice(item.getItem(), item.getQuantity()) +
                         "\n";
-                    totalAmount += getItemPrice(item.getItem(), item.getQuantity());
+                    totalAmount += Utility.getItemPrice(item.getItem(), item.getQuantity());
                 }
                 cards.add(item.getCardNumber());
             }
+            
             if (errMessage.isEmpty()) {
                 writeCardFile(cards, cardPath);
                 writeOutputFile(
-                    SUCCESS_FILE_NAME,
-                    (successMessage + "Total Amount $" + totalAmount).getBytes(StandardCharsets.UTF_8));
+                		Config.SUCCESS_FILE_NAME,
+                		successMessage.getBytes(StandardCharsets.UTF_8),
+                		("TotalPrice" + totalAmount).getBytes(StandardCharsets.UTF_8));
+                return true;
+                
             } else {
                 writeOutputFile(
-                    ERROR_FILE_NAME,
+                		Config.ERROR_FILE_NAME,
                     ("Please correct quantities for items " + errMessage).getBytes(StandardCharsets.UTF_8));
             }
+            
         } else {
             writeOutputFile(
-                ERROR_FILE_NAME,
+            		Config.ERROR_FILE_NAME,
                 ("Please correct quantities for items. Limit for Misc is " +
-                    MISC_ITEM_LIMIT +
+                		Config.MISC_ITEM_LIMIT +
                     ", Luxury is " +
-                    LUXURY_ITEM_LIMIT +
+                    Config.LUXURY_ITEM_LIMIT +
                     " and Essential is " +
-                    ESSENTIALS_ITEM_LIMIT)
+                    Config.ESSENTIALS_ITEM_LIMIT)
                 .getBytes(StandardCharsets.UTF_8));
         }
+		return false;
     }
 
+    private static void writeOutputFile(String fileName, byte[] bytes1, byte[] bytes) {
+        File file = new File(fileName);
+        try {
+            file.createNewFile();
+            FileOutputStream oFile = new FileOutputStream(file, false);
+            oFile.write(bytes);
+            oFile.close();
+        } catch (IOException e) {
+            System.out.println("Error " + e.getMessage());
+        }
+    }
+    
     private static void writeOutputFile(String fileName, byte[] bytes) {
         File file = new File(fileName);
         try {
