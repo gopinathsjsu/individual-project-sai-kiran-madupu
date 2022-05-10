@@ -7,4 +7,5 @@ public class Config {
     public static final String ERROR_FILE_NAME = "error.txt";
     public static final String CARD_PATH = "cards.csv";
 	public static final String INVENTORY_PATH = "inventory.csv";
+	public static final String CONVERTED_INPUT_CSV = "ip.csv";
 }

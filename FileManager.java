@@ -2,23 +2,26 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 
 
-public class FileUtility {
+public class FileManager {
 
     static Integer miscCount = 0;
     static Integer luxuryCount = 0;
     static Integer essentialsCount = 0;
     static final String[] categories = {"Essential", "Luxury", "Misc"};
 
-    public static Order readInputCSV(String filePath) {
+    public static Order readInputCSV(String filePath, boolean converted) {
         ArrayList < Item > items = new ArrayList < > ();
         String row;
         String cardNumber = null;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(filePath))) {
             // Skip column headers
             reader.readLine();
+            
             while ((row = reader.readLine()) != null) {
                 String[] data = row.split(",");
-                
+                if(converted && row.startsWith("Evaluation")) {
+                	continue;
+                }
                 // Card number might be present in only first row of the input order
                 if(data.length == 3 && data[2] != null) {
                 	cardNumber = data[2];

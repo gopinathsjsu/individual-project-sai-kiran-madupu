@@ -15,6 +15,7 @@ public class Billing {
     	String inputOrderPath = null; 
     	String cardPath = Config.CARD_PATH;
     	String inventoryPath = Config.INVENTORY_PATH;
+    	boolean converted = false;
     	
     	if(args.length == 0) {
     		String fileExtension = "";
@@ -27,12 +28,12 @@ public class Billing {
     		if(fileExtension.equals("xlsx")) {
     			//convert xlsx to csv
     			try {
+    				inputOrderPath = Config.CONVERTED_INPUT_CSV;
     				Workbook book = new Workbook(inputOrderPath);
-    				book.save("ip.csv", SaveFormat.AUTO);
-    				// inputOrderPath
+    				book.save(inputOrderPath, SaveFormat.AUTO);
+    				converted = true;
     				
     			} catch (Exception e) {
-    				// TODO Auto-generated catch block
     				e.printStackTrace();
     			}
     		}
@@ -42,8 +43,8 @@ public class Billing {
             
     	}
         
-        shopInventory = FileUtility.readInventoryCSV(inventoryPath);
-        Order order = FileUtility.readInputCSV(inputOrderPath.toString());
+        shopInventory = FileManager.readInventoryCSV(inventoryPath);
+        Order order = FileManager.readInputCSV(inputOrderPath, converted);
         
         boolean success = CartManager.validateAndPlaceOrder(order, cardPath);
         
