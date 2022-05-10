@@ -1,5 +1,4 @@
 Item,Quantity,Price,TotalPrice
-Shampoo,2,20.0,165.0
-chocolates,5,15.0
-Wallet,1,100.0
-Pen,10,30.0
+Perfume,2,100.0,450.0
+HomeDecorPiece,5,200.0
+Handbag,1,150.0
