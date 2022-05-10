@@ -12,35 +12,50 @@ public class CartManager {
     public static boolean validateAndPlaceOrder(Order order, String cardPath) {
         double totalAmount = 0.0;
         String errMessage = "";
-        String successMessage = "Item,Quantity,Price\n";
+        String successMessage = "Item,Quantity,Price,TotalPrice\n";
+        StringBuilder sb = new StringBuilder();
+        sb.append(successMessage);
         HashSet < String > cards = new HashSet < > ();
+        boolean updated = false;
         if (order.getEssentialCount() <= Config.ESSENTIALS_ITEM_LIMIT &&
             order.getLuxuryCount() <= Config.LUXURY_ITEM_LIMIT &&
             order.getMiscCount() <= Config.MISC_ITEM_LIMIT) {
             for (Item item: order.getOrderItems()) {
-//            	System.out.println("item = "+item);
-//            	System.out.println("util item = "+Utility.getItemQuantity(item.getItem()));
                 if (item.getQuantity() > Utility.getItemQuantity(item.getItem())) {
                     errMessage = item.getItem() + " " + item.getQuantity() + "\n";
                 } else {
-                    successMessage +=
-                        item.getItem() +
-                        "," +
-                        item.getQuantity() +
-                        "," +
-                        Utility.getItemPrice(item.getItem(), item.getQuantity()) +
-                        "\n";
-                    totalAmount += Utility.getItemPrice(item.getItem(), item.getQuantity());
+                	String it = item.getItem();
+                	int q = item.getQuantity();
+                	double ip = Utility.getItemPrice(it, q);
+                	totalAmount += Utility.getItemPrice(it, q);
+                	if(!updated) {
+                		sb.append(it);
+                		sb.append(",");
+                		sb.append(q);
+                		sb.append(",");
+                		sb.append(ip);
+                		sb.append(",");
+                		sb.append("#");
+                		sb.append("\n");
+                		updated = true;
+                	} else {
+                		sb.append(it);
+                		sb.append(",");
+                		sb.append(q);
+                		sb.append(",");
+                		sb.append(ip);
+                		sb.append("\n");
+                	}
                 }
                 cards.add(item.getCardNumber());
             }
-            
+            successMessage = sb.toString().replace("#", Double.toString(totalAmount));
+            // System.out.println(successMessage);
             if (errMessage.isEmpty()) {
                 writeCardFile(cards, cardPath);
                 writeOutputFile(
                 		Config.SUCCESS_FILE_NAME,
-                		successMessage.getBytes(StandardCharsets.UTF_8),
-                		("TotalPrice" + totalAmount).getBytes(StandardCharsets.UTF_8));
+                		successMessage.getBytes(StandardCharsets.UTF_8));
                 return true;
                 
             } else {
@@ -63,18 +78,6 @@ public class CartManager {
 		return false;
     }
 
-    private static void writeOutputFile(String fileName, byte[] bytes1, byte[] bytes) {
-        File file = new File(fileName);
-        try {
-            file.createNewFile();
-            FileOutputStream oFile = new FileOutputStream(file, false);
-            oFile.write(bytes);
-            oFile.close();
-        } catch (IOException e) {
-            System.out.println("Error " + e.getMessage());
-        }
-    }
-    
     private static void writeOutputFile(String fileName, byte[] bytes) {
         File file = new File(fileName);
         try {

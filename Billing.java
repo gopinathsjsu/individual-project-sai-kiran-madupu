@@ -3,6 +3,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import com.aspose.cells.SaveFormat;
+import com.aspose.cells.Workbook;
+
 
 public class Billing {
 
@@ -21,9 +24,22 @@ public class Billing {
     		if (i > 0) {
     		    fileExtension = inputOrderPath.substring(i+1);
     		}
+    		if(fileExtension.equals("xlsx")) {
+    			//convert xlsx to csv
+    			try {
+    				Workbook book = new Workbook(inputOrderPath);
+    				book.save("ip.csv", SaveFormat.AUTO);
+    				// inputOrderPath
+    				
+    			} catch (Exception e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+    		}
     	} else {
     		// inventoryPath = Paths.get(args[0]);
             inputOrderPath = Paths.get(args[1]).toString();
+            
     	}
         
         shopInventory = FileUtility.readInventoryCSV(inventoryPath);
